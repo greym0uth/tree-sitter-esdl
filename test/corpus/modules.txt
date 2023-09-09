@@ -51,3 +51,21 @@ module default {
         (identifier)
         (declarations)))))
 
+==================
+Nested module
+==================
+
+module default {
+    module nested {
+    }
+}
+
+---
+
+(source_file
+  (module
+    (identifier)
+    (schema_declarations
+      (module
+        (identifier)
+        (schema_declarations)))))

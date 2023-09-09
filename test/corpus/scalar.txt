@@ -24,3 +24,25 @@ module default {
             (argspec
               (expression
                 (number)))))))))
+
+==================
+Enum declaration
+==================
+
+module default {
+	scalar type Color extending enum<Red, Blue, Green>;
+}
+
+---
+
+(source_file
+  (module
+    name: (identifier)
+    (schema_declarations
+      (scalar_type_def
+        name: (identifier)
+        (extending
+          supertype: (enum
+            (identifier)
+            (identifier)
+            (identifier)))))))

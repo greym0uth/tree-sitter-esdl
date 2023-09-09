@@ -46,6 +46,7 @@ module.exports = grammar({
       'module',
       field('name', $.identifier),
       $.schema_declarations,
+      optional(';'),
     ),
 
     schema_declarations: $ => seq(
@@ -59,6 +60,7 @@ module.exports = grammar({
           $.constraint,
           $.function,
           $.alias,
+          $.module,
         )),
       ),
     ),
@@ -77,10 +79,11 @@ module.exports = grammar({
       repeat(
         choice(
           $.property,
-          $.link,
+          seq($.link, ';'),
           $.annotation,
           $.constraint,
           $.index,
+          seq($.extending, ';'),
         ),
       ),
     ),
@@ -91,7 +94,7 @@ module.exports = grammar({
       'type',
       field('name', $.identifier),
       optional($.extending),
-      optional($.declarations),
+      choice(';', optional($.declarations)),
     ),
         
     link: $ => seq(
@@ -104,24 +107,22 @@ module.exports = grammar({
         seq(':=', $.expression),
         $.declarations,
       )),
-      optional(';'),
     ),
     
     property: $ => seq(
       optional(repeat($.modifier)),
-      'property',
+      optional('property'),
       field('name', $.identifier),
       choice(
         seq(
-          optional($.extending),
-          optional(seq('->', $.type)),
+          optional(seq(':', $.type)),
+          choice($.declarations, ';'),
         ),
-        optional(choice(
-          seq(':=', $.expression),
+        choice(
+          seq(':=', $.expression, ';'),
           $.declarations,
-        )),
+        ),
       ),
-      optional(';'),
     ),
 
     annotation: $ => seq(
@@ -406,13 +407,10 @@ module.exports = grammar({
     ),
     
     enum: $ => seq(
-      'scalar type',
-      seq(
-        'enum',
-        '<',
-        delim($.identifier),
-        '>',
-      )       
+      'enum',
+      '<',
+      delim($.identifier),
+      '>',
     ),
 
     type: $ => choice(

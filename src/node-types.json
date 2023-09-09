@@ -294,6 +294,10 @@
           "named": true
         },
         {
+          "type": "extending",
+          "named": true
+        },
+        {
           "type": "index",
           "named": true
         },
@@ -646,10 +650,6 @@
           "named": true
         },
         {
-          "type": "extending",
-          "named": true
-        },
-        {
           "type": "modifier",
           "named": true
         },
@@ -735,6 +735,10 @@
         },
         {
           "type": "link",
+          "named": true
+        },
+        {
+          "type": "module",
           "named": true
         },
         {
@@ -1136,10 +1140,6 @@
   },
   {
     "type": "scalar",
-    "named": false
-  },
-  {
-    "type": "scalar type",
     "named": false
   },
   {

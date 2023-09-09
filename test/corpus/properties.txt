@@ -4,7 +4,7 @@ Property declaration
 
 module default {
     type Movie {
-        property Title -> str;
+        property Title: str;
     }
 }
 
@@ -28,7 +28,9 @@ Extending Property
 
 module default {
     type Movie {
-      property address extending address_base -> str;
+        property address: str {
+            extending address_base;
+        }
     }
 }
 
@@ -43,10 +45,11 @@ module default {
         (declarations
           (property
             (identifier)
-            (extending
-              (type
-                (identifier)))
-            (type)))))))
+            (type)
+            (declarations
+              (extending
+                (type
+                  (identifier))))))))))
 
 ==================
 Property with modifiers 
@@ -54,8 +57,8 @@ Property with modifiers
 
 module default {
     type Movie {
-        required property address -> str;
-        required overloaded property name -> str;
+        required property address: str;
+        required overloaded property name: str;
     }
 }
 
@@ -103,7 +106,7 @@ Abstract Property with annotation
 
 module default {
     abstract property addess_base {
-      annotation title := 'Mailing address';
+        annotation title := 'Mailing address';
     }
 }
 
@@ -151,3 +154,33 @@ module default {
                     (identifier))
                   (expression
                     (identifier)))))))))))
+
+==================
+Property with declarations
+==================
+
+module default {
+    type Movie {
+        property Title: str {
+            readonly := true;
+        }
+    }
+}
+
+---
+
+(source_file
+  (module
+    (identifier)
+    (schema_declarations
+      (object_type
+        (identifier)
+        (declarations
+          (property
+            (identifier)
+            (type)
+            (declarations
+              (property
+                (identifier)
+                (expression
+                  (true))))))))))
