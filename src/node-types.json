@@ -1,5 +1,20 @@
 [
   {
+    "type": "accessor",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "alias",
     "named": true,
     "fields": {
@@ -302,10 +317,6 @@
           "named": true
         },
         {
-          "type": "link",
-          "named": true
-        },
-        {
           "type": "property",
           "named": true
         }
@@ -347,11 +358,19 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
+          "type": "accessor",
+          "named": true
+        },
+        {
           "type": "binary_expression",
+          "named": true
+        },
+        {
+          "type": "edgeql_fragment",
           "named": true
         },
         {
@@ -403,6 +422,22 @@
           },
           {
             "type": "type",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "extension",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
             "named": true
           }
         ]
@@ -495,48 +530,6 @@
         },
         {
           "type": "on",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "link",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "declarations",
-          "named": true
-        },
-        {
-          "type": "expression",
-          "named": true
-        },
-        {
-          "type": "extending",
-          "named": true
-        },
-        {
-          "type": "modifier",
-          "named": true
-        },
-        {
-          "type": "type",
           "named": true
         }
       ]
@@ -734,10 +727,6 @@
           "named": true
         },
         {
-          "type": "link",
-          "named": true
-        },
-        {
           "type": "module",
           "named": true
         },
@@ -765,7 +754,15 @@
       "required": false,
       "types": [
         {
+          "type": "extension",
+          "named": true
+        },
+        {
           "type": "module",
+          "named": true
+        },
+        {
+          "type": "schema_declarations",
           "named": true
         }
       ]
@@ -781,6 +778,10 @@
       "types": [
         {
           "type": "escape_sequence",
+          "named": true
+        },
+        {
+          "type": "identifier",
           "named": true
         },
         {
@@ -814,9 +815,13 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "accessor",
+          "named": true
+        },
         {
           "type": "array",
           "named": true
@@ -867,6 +872,10 @@
     "named": false
   },
   {
+    "type": "\"",
+    "named": false
+  },
+  {
     "type": "%",
     "named": false
   },
@@ -911,11 +920,19 @@
     "named": false
   },
   {
+    "type": ".",
+    "named": false
+  },
+  {
     "type": "/",
     "named": false
   },
   {
     "type": ":",
+    "named": false
+  },
+  {
+    "type": "::",
     "named": false
   },
   {
@@ -952,6 +969,14 @@
   },
   {
     "type": ">>",
+    "named": false
+  },
+  {
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
     "named": false
   },
   {
@@ -1092,6 +1117,10 @@
   },
   {
     "type": "int64",
+    "named": false
+  },
+  {
+    "type": "is",
     "named": false
   },
   {

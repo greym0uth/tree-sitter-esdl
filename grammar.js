@@ -39,7 +39,11 @@ module.exports = grammar({
   ],
 
   rules: {
-    source_file: $ => repeat($.module),
+    source_file: $ => repeat(choice(
+      $.extension,
+      $.module,
+      $.schema_declarations,
+    )),
     
     // MODULES
     module: $ => seq(
@@ -54,7 +58,6 @@ module.exports = grammar({
         repeat(choice(
           $.object_type,
           $.scalar_type_def,
-          $.link,
           $.property,
           $.annotation,
           $.constraint,
@@ -79,7 +82,6 @@ module.exports = grammar({
       repeat(
         choice(
           $.property,
-          seq($.link, ';'),
           $.annotation,
           $.constraint,
           $.index,
@@ -97,21 +99,9 @@ module.exports = grammar({
       choice(';', optional($.declarations)),
     ),
         
-    link: $ => seq(
-      optional(repeat($.modifier)),
-      'link',
-      field('name', $.identifier),
-      optional($.extending),
-      optional(seq('->', $.type)),
-      optional(choice(
-        seq(':=', $.expression),
-        $.declarations,
-      )),
-    ),
-    
     property: $ => seq(
       optional(repeat($.modifier)),
-      optional('property'),
+      optional(choice('property', 'link')),
       field('name', $.identifier),
       choice(
         seq(
@@ -248,6 +238,7 @@ module.exports = grammar({
     modifier: $ => choice(
       'abstract',
       'overloaded',
+      'global',
       choice('required', 'optional'),
       choice('single', 'multi'),
       'inheritable',
@@ -274,16 +265,24 @@ module.exports = grammar({
       $.true,
       $.false,
       $.null,
-      $.identifier,
+      seq(optional('.'), delim(seq($.identifier, optional($.accessor)), '.')),
       seq('global', $.identifier),
+      seq('is', $.identifier),
       $.fncall,
       $.binary_expression,
       parens($.expression),
+      alias(choice(
+        $._edgeql_chars,
+        $.escape_sequence,
+      ), $.edgeql_fragment),
     ),
     
     edgeql_expression: $ => choice(
       $.expression,
     ),
+
+    accessor: $ => 
+      seq('[', $.expression, ']'),
     
     fncall: $ => seq(
       field('name', $.identifier),
@@ -324,12 +323,13 @@ module.exports = grammar({
     // PRIMITIVES
 
     string: $ => seq(
-      "'",
-      repeat(choice(
-        alias($.unescaped_single_string_fragment, $.string_fragment),
-        $.escape_sequence
-      )),
-      "'"
+      optional($.identifier),
+      str(
+        repeat(choice(
+          alias($.unescaped_single_string_fragment, $.string_fragment),
+          $.escape_sequence
+        ))
+      ),
     ),
     
     // TODO: Proper edgeql language injection
@@ -416,6 +416,7 @@ module.exports = grammar({
     type: $ => choice(
       $._scalar_type,
       $.identifier,
+      seq(optional('::'), delim(seq($.identifier, optional($.accessor)), '::')),
       $.array,
       $.tuple,
     ),
@@ -424,8 +425,6 @@ module.exports = grammar({
       const alpha = /[^\x00-\x1F\s\p{Zs}0-9:;`"'@#.,|^&<=>+\-*/\\%?!~()\[\]{}\uFEFF\u2060\u200B]|\\u[0-9a-fA-F]{4}|\\u\{[0-9a-fA-F]+\}/
       const alphanumeric = /[^\x00-\x1F\s\p{Zs}:;`"'@#.,|^&<=>+\-*/\\%?!~()\[\]{}\uFEFF\u2060\u200B]|\\u[0-9a-fA-F]{4}|\\u\{[0-9a-fA-F]+\}/
       return token(seq(
-        // __subject__ shorthand
-        optional('.'),
         alpha,
         repeat(alphanumeric),
       ))
@@ -490,5 +489,12 @@ function parens (rule) {
 
 function delim (rule, delimiter = ',') {
   return seq(rule, repeat(seq(delimiter, rule)))
+}
+
+function str (rule) {
+  return choice(
+    seq("'", rule, "'"),
+    seq('"', rule, '"'),
+  )
 }
 

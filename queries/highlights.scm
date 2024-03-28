@@ -28,7 +28,6 @@
 
 ; Properties
 (property) @property
-(link) @property
 
 ; Links
 (identifier) @variable

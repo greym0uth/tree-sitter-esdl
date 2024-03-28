@@ -21,6 +21,31 @@ module default {
             (identifier)
             (type)))))))
 
+==================
+Link declaration
+==================
+
+module default {
+    type Movie {
+        multi link actors: Person;
+    }
+}
+
+---
+
+(source_file
+  (module
+    (identifier)
+    (schema_declarations
+      (object_type
+        (identifier)
+        (declarations
+          (property
+            (modifier)
+            (identifier)
+            (type
+              (identifier))))))))
+
 
 ==================
 Extending Property 
